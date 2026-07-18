@@ -17,7 +17,8 @@ export const createVehicle = asyncHandler(async (req: any, res: any) => {
 
 // Get all vehicles data
 export const getAllVehicles = asyncHandler(async (req: any, res: any) => {
-  const vehicles = await vehicleService.getAllVehicles();
+  // Used req.query for passing the query from service to controller
+  const vehicles = await vehicleService.getAllVehicles(req.query);
 
   res.status(200).json({
     success: true,

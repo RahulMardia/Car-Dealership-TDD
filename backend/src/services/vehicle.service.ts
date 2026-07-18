@@ -20,7 +20,26 @@ export const createVehicle = async (
     return vehicle;
 }
 
-export const getAllVehicles = async () =>{
+export const getAllVehicles = async (query: any) =>{
+    const filter: any = {}
+
+    // Make query and filter
+    if (query.make) filter.make = query.make;
+    // Model query and filter
+    if (query.model) filter.model = query.model;
+    // Category query and filter
+    if (query.category) filter.category = query.category;
+
+    // Price Range query and filter
+    if (query.minPrice || query.maxPrice) {
+        filter.price = {};
+        if (query.minPrice) filter.price.$gte = Number(query.minPrice);
+        if (query.maxPrice) filter.price.$lte = Number(query.maxPrice);
+    }
+
+    // Filter data query also returns all data
+    return await Vehicle.find(filter);
+
     // To get all the vehicles
-    return await Vehicle.find()
+    // return await Vehicle.find()
 }
