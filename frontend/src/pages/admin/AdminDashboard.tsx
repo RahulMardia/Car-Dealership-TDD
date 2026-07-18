@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, LogOut, X, Save } from "lucide-react";
 import { useAppDispatch } from "@/redux/store";
-import { getVehicles } from "@/redux/actions/vehicleActions";
+import { addVehicleAction, getVehicles } from "@/redux/actions/vehicleActions";
 import { logoutAction } from "@/redux/actions/authActions";
 import AdminVehicleCard, { Vehicle } from "@/components/ui/AdminVehicleCard";
 import CategorySelect from "@/components/ui/CategorySelect";
@@ -16,7 +16,7 @@ const AdminDashboard = () => {
   const dispatch = useAppDispatch();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Toggle state for the inline form
   const [showAddForm, setShowAddForm] = useState(false);
 
@@ -26,16 +26,16 @@ const AdminDashboard = () => {
   const [category, setCategory] = useState("SUV");
   const [price, setPrice] = useState<number | "">("");
   const [quantity, setQuantity] = useState<number | "">("");
-
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fetchVehicles = async () => {
+    setIsLoading(true);
+    const response: any = await dispatch(getVehicles());
+    if (response && Array.isArray(response)) {
+      setVehicles(response);
+    }
+    setIsLoading(false);
+  };
   useEffect(() => {
-    const fetchVehicles = async () => {
-      setIsLoading(true);
-      const response: any = await dispatch(getVehicles());
-      if (response && Array.isArray(response)) {
-        setVehicles(response);
-      }
-      setIsLoading(false);
-    };
     fetchVehicles();
   }, [dispatch]);
 
@@ -44,12 +44,24 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Ready to send to Create API:", { make, model, category, price, quantity });
-    // dispatch(addVehicleAction({ make, model, category, price, quantity }))
-    
-   
+    setIsProcessing(true);
+
+    await dispatch(addVehicleAction({ make, model, category, price, quantity }));
+
+    const response: any = await dispatch(getVehicles());
+    if (response && Array.isArray(response)) {
+      setVehicles(response);
+    }
+
+    setIsProcessing(false);
+    setShowAddForm(false);
+
+    setMake("");
+    setModel("");
+    setPrice("");
+    setQuantity("");
   };
 
   return (
@@ -60,16 +72,16 @@ const AdminDashboard = () => {
           <p className="text-white/50 mt-1">Manage dealership inventory and operations.</p>
         </div>
         <div className="flex gap-4">
-          <Button 
-            onClick={() => setShowAddForm(!showAddForm)} 
+          <Button
+            onClick={() => setShowAddForm(!showAddForm)}
             className={`transition-colors shadow-[0_0_15px_rgba(255,255,255,0.2)] ${showAddForm ? 'bg-white/10 text-white hover:bg-white/20 border border-white/20' : 'bg-white text-black hover:bg-white/90'}`}
           >
             {showAddForm ? <X className="w-4 h-4 mr-2" /> : <Plus className="w-4 h-4 mr-2" />}
             {showAddForm ? 'Close' : 'Add New Vehicle'}
           </Button>
-          <Button 
-            variant="outline" 
-            onClick={handleLogout} 
+          <Button
+            variant="outline"
+            onClick={handleLogout}
             className="border-white/20 hover:bg-white hover:text-black transition-colors text-white"
           >
             <LogOut className="w-4 h-4 mr-2" />
@@ -77,8 +89,8 @@ const AdminDashboard = () => {
           </Button>
         </div>
       </div>
-      
-      
+
+
       {showAddForm && (
         <div className="mb-10 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl animate-in slide-in-from-top-4 fade-in duration-300">
           <h2 className="text-xl font-bold mb-4">Register New Vehicle</h2>
@@ -98,19 +110,20 @@ const AdminDashboard = () => {
             </div>
             <div className="space-y-2">
               <Label className="text-white/80 text-xs uppercase">Quantity</Label>
-              <Input type="number" required  value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="10" />
+              <Input type="number" required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="10" />
             </div>
-            
+
             <div className="col-span-2 md:col-span-5 flex justify-end mt-2">
-               <Button type="submit" className="bg-white text-black hover:bg-white/90">
-                 <Save className="w-4 h-4 mr-2" /> Add to Inventory
-               </Button>
+              <Button type="submit" disabled={isProcessing} className="bg-white text-black hover:bg-white/90">
+                <Save className="w-4 h-4 mr-2" />
+                {isProcessing ? "Adding..." : "Add to Inventory"}
+              </Button>
             </div>
           </form>
         </div>
       )}
-      
-  
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           <div className="col-span-full text-center text-white/50 py-12 animate-pulse">
