@@ -1,6 +1,8 @@
 import { Router } from "express";
 import * as vehicleController from "../controllers/vehicle.controller"
 import { authenticate, authorizeAdmin } from "../middleware/auth.middleware";
+import inventoryRoutes from "../routes/inventory.routes"
+
 
 const router = Router();
 
@@ -14,7 +16,7 @@ router.get('/',authenticate,vehicleController.getAllVehicles);
 router.put('/:id', authenticate, authorizeAdmin, vehicleController.updateVehicle);
 
 // Delete Vehicle using ID
-router.delete('/:id',authenticate, authorizeAdmin, vehicleController.deleteVehicle)
+router.delete('/:id',authenticate, authorizeAdmin, vehicleController.deleteVehicle);
 
-
+router.use('/:id',inventoryRoutes);
 export default router;
