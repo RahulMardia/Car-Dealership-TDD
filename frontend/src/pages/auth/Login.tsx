@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { api, POST } from "@/lib/apiConstants";
 import AuthCardLayout from "@/components/layout/AuthCardLayout";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { loginAction } from "@/redux/actions/authActions";
