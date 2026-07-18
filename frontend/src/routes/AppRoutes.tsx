@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "../pages/LandingPage/LandingPage";
 import Login from "../pages/auth/Login";
+import AdminLogin from "../pages/auth/AdminLogin";
 import Register from "../pages/auth/Register";
 import Dashboard from "../pages/user/Dashboard";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -18,6 +19,7 @@ export default function AppRoutes() {
       <Route element={<PublicRoute />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
       </Route>
 
