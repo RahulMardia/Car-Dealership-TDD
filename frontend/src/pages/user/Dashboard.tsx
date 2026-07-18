@@ -1,27 +1,17 @@
 
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { api, GET } from "@/lib/apiConstants";
-import { useApi } from "@/hooks/useApi";
+
+
 import { useEffect } from "react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { request, isLoading, error } = useApi();
-  const handleAPI = async () => {
-    
-      try {
-        const response = await request(GET, api.vehicles, );
-        
-        console.log('Vehicles->,',response);
-        
-      } catch (err) {
-        console.error("Login failed", err);
-      }
-    };
+ 
+ 
     
     useEffect(() => {
-      handleAPI()
+  // 
     }, [navigate]);
 
   const handleLogout = () => {
