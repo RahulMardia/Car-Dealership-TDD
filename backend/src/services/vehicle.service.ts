@@ -23,10 +23,17 @@ export const createVehicle = async (
 export const getAllVehicles = async (query: any) =>{
     const filter: any = {}
 
-    // Make query and filter
-    if (query.make) filter.make = query.make;
-    // Model query and filter
-    if (query.model) filter.model = query.model;
+    // Generic Search (matches Make OR Model, case-insensitive)
+    if (query.search) {
+        filter.$or = [
+            { make: { $regex: query.search, $options: 'i' } },
+            { model: { $regex: query.search, $options: 'i' } }
+        ];
+    } else {
+        // Fallback to exact match if search isn't used
+        if (query.make) filter.make = query.make;
+        if (query.model) filter.model = query.model;
+    }
     // Category query and filter
     if (query.category) filter.category = query.category;
 
