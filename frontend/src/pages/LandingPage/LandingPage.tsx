@@ -1,10 +1,22 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, KeyRound, UserPlus } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const WORDS = ["Mobility.", "Luxury.", "Performance.", "Excellence."];
 
 const LandingPage = () => {
+  const [currentWord, setCurrentWord] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentWord((prev) => (prev + 1) % WORDS.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-black text-foreground overflow-hidden selection:bg-white/20">
-      {/* Background Image & Overlay */}
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <img 
           src="/hero-car.png" 
@@ -15,7 +27,7 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black" />
       </div>
 
-      {/* Navigation Bar */}
+      {/* Navbar */}
       <nav className="relative z-10 w-full px-8 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
@@ -27,11 +39,17 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
+      {/* Main */}
       <main className="relative z-10 flex flex-col items-center justify-center min-h-[85vh] px-6 text-center">
         <div className="space-y-6 max-w-4xl animate-in slide-in-from-bottom-8 fade-in duration-1000">
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-white">
-            Redefining <span className="text-white/50">Mobility.</span>
+            Redefining{" "}
+            <span 
+              key={currentWord} 
+              className="text-white/50 animate-in fade-in slide-in-from-bottom-2 duration-700 inline-block"
+            >
+              {WORDS[currentWord]}
+            </span>
           </h1>
           
           <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
@@ -57,10 +75,21 @@ const LandingPage = () => {
               <ArrowRight className="w-4 h-4 ml-2 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
             </Link>
           </div>
+
+          {/* Stats bar */}
+          <div className="pt-12 animate-in fade-in duration-1000 delay-500">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs md:text-sm font-medium tracking-widest uppercase text-white/40">
+              <span>500+ Vehicles in Stock</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>Instant Digital Purchasing</span>
+              <span className="hidden sm:inline text-white/20">•</span>
+              <span>24/7 Premium Support</span>
+            </div>
+          </div>
         </div>
       </main>
 
-      {/* Footer minimal info */}
+      {/* Footer */}
       <footer className="absolute bottom-6 w-full text-center z-10">
         <p className="text-xs text-white/30 tracking-widest uppercase font-light">
           © 2026 AutoInventory • Premium Dealership
