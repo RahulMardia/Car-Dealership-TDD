@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, LogOut, X, Save } from "lucide-react";
 import { useAppDispatch } from "@/redux/store";
-import { addVehicleAction, getVehicles } from "@/redux/actions/vehicleActions";
+import { addVehicleAction, deleteVehicle, getVehicles } from "@/redux/actions/vehicleActions";
 import { logoutAction } from "@/redux/actions/authActions";
 import AdminVehicleCard, { Vehicle } from "@/components/ui/AdminVehicleCard";
 import CategorySelect from "@/components/ui/CategorySelect";
@@ -63,6 +63,11 @@ const AdminDashboard = () => {
     setPrice("");
     setQuantity("");
   };
+
+  const deleteVehicles = async (id: any) =>{
+    await dispatch(deleteVehicle(id));
+    fetchVehicles();
+  }
 
   return (
     <div className="container mx-auto p-8 min-h-screen bg-black text-white selection:bg-white/20">
@@ -131,7 +136,13 @@ const AdminDashboard = () => {
           </div>
         ) : vehicles.length > 0 ? (
           vehicles.map((vehicle) => (
-            <AdminVehicleCard key={vehicle._id} vehicle={vehicle} />
+            <AdminVehicleCard
+              key={vehicle._id}
+              vehicle={vehicle}
+              onUpdate={(id) => navigate(`/admin/vehicles/edit/${id}`)}
+              onRestock={(id) => console.log("Fire Restock API for", id)}
+              onDelete={(id) => deleteVehicles(id)}
+            />
           ))
         ) : (
           <div className="col-span-full text-center text-white/50 py-12 border border-white/5 rounded-lg bg-white/5">

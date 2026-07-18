@@ -32,7 +32,7 @@ const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehic
                     <div className="flex justify-between items-start mb-6">
                         <div>
                             <h3 className="text-xl font-bold">Manage Vehicle</h3>
-                            <p className="text-white/50 text-xs">ID: {vehicle._id}</p>
+                            
                         </div>
                         <Button variant="ghost" size="icon" onClick={() => setShowDetails(false)} className="hover:bg-white/10 text-white">
                             <X className="w-5 h-5" />
