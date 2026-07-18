@@ -1,11 +1,34 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { api, POST } from "@/lib/apiConstants";
+import { useApi } from "@/hooks/useApi";
 import AuthCardLayout from "@/components/layout/AuthCardLayout";
 
 const Register = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { request, isLoading, error } = useApi();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Register submitted");
+    try {
+      const response = await request(POST, api.register, { name, email, password });
+      
+      if (response.success && response.token) {
+        // Save the token to local storage
+        
+        localStorage.setItem("token", response.token);
+        
+        // Redirect to dashboard
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error("Registration failed", err);
+    }
   };
 
   return (
@@ -15,9 +38,14 @@ const Register = () => {
       footerText="Already have an account?"
       footerLinkText="Login"
       footerLinkTo="/login"
-      buttonText="Create Account"
+      buttonText={isLoading ? "Creating Account..." : "Create Account"}
       onSubmit={handleSubmit}
     >
+      {error && (
+        <div className="bg-red-500/20 border border-red-500/50 text-red-200 p-3 rounded-md text-sm text-center mb-2 animate-in fade-in">
+          {error}
+        </div>
+      )}
       <div className="grid gap-2">
         <Label htmlFor="name" className="text-white/80">Full Name</Label>
         <Input
@@ -25,6 +53,9 @@ const Register = () => {
           type="text"
           placeholder="John Doe"
           required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          disabled={isLoading}
           className="bg-black/50 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-white/30 h-11"
         />
       </div>
@@ -35,6 +66,9 @@ const Register = () => {
           type="email"
           placeholder="m@example.com"
           required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isLoading}
           className="bg-black/50 border-white/20 text-white placeholder:text-white/30 focus-visible:ring-white/30 h-11"
         />
       </div>
@@ -45,6 +79,9 @@ const Register = () => {
           type="password"
           required
           minLength={6}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
           className="bg-black/50 border-white/20 text-white focus-visible:ring-white/30 h-11"
         />
       </div>

@@ -19,6 +19,7 @@ const Login = () => {
       
       if (response.success && response.token) {
         // Save the token to local storage
+        
         localStorage.setItem("token", response.token);
         
         // Redirect to dashboard
