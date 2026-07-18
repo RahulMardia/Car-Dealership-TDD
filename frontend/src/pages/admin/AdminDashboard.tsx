@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, LogOut, X, Save } from "lucide-react";
 import { useAppDispatch } from "@/redux/store";
-import { addVehicleAction, deleteVehicle, getVehicles } from "@/redux/actions/vehicleActions";
+import { addVehicleAction, deleteVehicle, getVehicles, restockVehicle } from "@/redux/actions/vehicleActions";
 import { logoutAction } from "@/redux/actions/authActions";
 import AdminVehicleCard, { Vehicle } from "@/components/ui/AdminVehicleCard";
 import CategorySelect from "@/components/ui/CategorySelect";
@@ -66,6 +66,11 @@ const AdminDashboard = () => {
 
   const deleteVehicles = async (id: any) =>{
     await dispatch(deleteVehicle(id));
+    fetchVehicles();
+  }
+
+  const restockVehicles =  async (id: any,quantity:number) =>{
+    await dispatch(restockVehicle(id,quantity));
     fetchVehicles();
   }
 
@@ -140,7 +145,7 @@ const AdminDashboard = () => {
               key={vehicle._id}
               vehicle={vehicle}
               onUpdate={(id) => navigate(`/admin/vehicles/edit/${id}`)}
-              onRestock={(id) => console.log("Fire Restock API for", id)}
+              onRestock={(id, quantity) => restockVehicles(id, quantity)}
               onDelete={(id) => deleteVehicles(id)}
             />
           ))
