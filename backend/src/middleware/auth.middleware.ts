@@ -23,3 +23,12 @@ export const authenticate = asyncHandler(
     next();
   }
 );
+
+export const authorizeAdmin = asyncHandler(
+  async (req: any, res: Response, next: NextFunction) => {
+    if (req.user.role !== "admin") {
+      throw new AppError("Access denied. Admin privileges required.", 403);
+    }
+    next();
+  }
+);

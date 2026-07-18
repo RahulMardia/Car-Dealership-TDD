@@ -12,11 +12,10 @@ interface CreateVehicle {
 
 export const createVehicle = async (
     // Data is deconstruting the CreateVehicle Object
-    data: CreateVehicle,
-    userId: string,
+    data: CreateVehicle
 ) => {
-    // Adding the owner key to the data itself
-    const vehicle = await Vehicle.create({ ...data, owner: userId })
+    // Adding the vehicle to the database
+    const vehicle = await Vehicle.create(data)
     return vehicle;
 }
 

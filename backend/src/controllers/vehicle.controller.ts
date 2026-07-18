@@ -3,10 +3,7 @@ import * as vehicleService from "../services/vehicle.service";
 
 // Create vehicle
 export const createVehicle = asyncHandler(async (req: any, res: any) => {
-  const vehicle = await vehicleService.createVehicle(
-    req.body,
-    req.user.id
-  );
+  const vehicle = await vehicleService.createVehicle(req.body);
 
   res.status(201).json({
     success: true,

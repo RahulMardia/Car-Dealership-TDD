@@ -29,11 +29,6 @@ const vehicleSchema = new Schema(
             required: true,
             default:0,
             min: 0
-        },
-        owner: {
-            type: Schema.Types.ObjectId,
-            ref: 'users',
-            required: true
         }
         
     },
