@@ -1,6 +1,6 @@
 import { makeAPIRequest } from "@/lib/apiService";
 import { IS_LOADING, SET_ERROR, SET_VEHICLES } from "../actionTypes";
-import { api, DELETE, GET, POST } from "@/lib/apiConstants";
+import { api, DELETE, GET, POST, PUT } from "@/lib/apiConstants";
 import { AppDispatch } from "../store";
 
 export const getVehicles = (params?: any) => async (dispatch: AppDispatch) => {
@@ -140,17 +140,16 @@ export const restockVehicle = (vehicleId: string, quantity: number) => async (di
 };
 
 
-export const updateVehicle = (vehicleData?: any) => async (dispatch: AppDispatch) => {
+export const updateVehicle = (vehicleID?:any,vehicleData?: any) => async (dispatch: AppDispatch) => {
   try {
     dispatch({ type: IS_LOADING, payload: true });
     dispatch({ type: SET_ERROR, payload: null });
 
     const response: any = await makeAPIRequest({
-      method: POST,
-      url: `${api.vehicles}`,
+      method: PUT,
+      url: `${api.vehicles}/${vehicleID}`,
       data:
         vehicleData
-      
     });
 
     if (response.success) {

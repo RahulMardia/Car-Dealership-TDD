@@ -1,27 +1,51 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Lock } from "lucide-react";
+import { updateVehicle } from "@/redux/actions/vehicleActions";
+import { useAppDispatch } from "@/redux/store";
 
 const EditVehicle = () => {
   const navigate = useNavigate();
-  const { id } = useParams(); // Grabs the vehicle ID from the URL!
-
-  // The local state ready for the Update API
-  const [make, setMake] = useState("");
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
+  
+  // data passed from the Dashboard
+  const location = useLocation();
+  const carData = location.state?.vehicle;
+ 
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [make, setMake] = useState(""); 
   const [model, setModel] = useState("");
-  const [category, setCategory] = useState("SUV");
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [quantity, setQuantity] = useState<number | "">("");
+  useEffect(() => {
+   
+    if (carData) {
+      setMake(carData.make);
+      setModel(carData.model);
+      setCategory(carData.category);
+      setPrice(carData.price);
+      setQuantity(carData.quantity);
+    } else {
+      
+      navigate("/admin");
+    }
+  }, [carData, navigate]);
 
-  // (Later you will add a useEffect here to fetch the car by ID and pre-fill these states!)
-
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Ready to send to Update API:", { id, make, model, category, price, quantity });
-    // dispatch(updateVehicleAction(id, { make, model, category, price, quantity }))
+    setIsProcessing(true);
+    
+    console.log("Ready to send to Update API:", { id, price, quantity });
+    
+    await dispatch(updateVehicle(id, { price, quantity }));
+    
+    setIsProcessing(false);
+    navigate("/admin"); 
   };
 
   return (
@@ -35,62 +59,60 @@ const EditVehicle = () => {
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Update Vehicle</h1>
-            
+            <p className="text-white/50 text-sm mt-1">Modifying ID: <span className="font-mono text-white/70">{id}</span></p>
           </div>
         </div>
 
         <form onSubmit={handleUpdate} className="grid grid-cols-2 gap-6">
-          <div className="col-span-2 md:col-span-1 space-y-2">
-            <Label className="text-white/80 text-xs uppercase tracking-wider">Make (Brand)</Label>
-            <Input 
-              required value={make} onChange={(e) => setMake(e.target.value)}
-              className="bg-black/50 border-white/10 text-white focus-visible:ring-white/30 h-11" placeholder="e.g. Toyota" 
-            />
+          
+          {/* READ ONLY FIELDS */}
+          <div className="col-span-2 md:col-span-1 space-y-2 relative">
+            <Label className="text-white/50 text-xs uppercase tracking-wider flex items-center gap-1">
+              Make <Lock className="w-3 h-3" />
+            </Label>
+            <Input disabled value={make} className="bg-black/30 border-white/5 text-white/50 h-11 cursor-not-allowed" />
           </div>
           
-          <div className="col-span-2 md:col-span-1 space-y-2">
-            <Label className="text-white/80 text-xs uppercase tracking-wider">Model</Label>
+          <div className="col-span-2 md:col-span-1 space-y-2 relative">
+            <Label className="text-white/50 text-xs uppercase tracking-wider flex items-center gap-1">
+              Model <Lock className="w-3 h-3" />
+            </Label>
+            <Input disabled value={model} className="bg-black/30 border-white/5 text-white/50 h-11 cursor-not-allowed" />
+          </div>
+
+          <div className="col-span-2 space-y-2 relative">
+            <Label className="text-white/50 text-xs uppercase tracking-wider flex items-center gap-1">
+              Category <Lock className="w-3 h-3" />
+            </Label>
+            <Input disabled value={category} className="bg-black/30 border-white/5 text-white/50 h-11 cursor-not-allowed" />
+          </div>
+
+          {/* EDITABLE FIELDS */}
+          <div className="col-span-2 md:col-span-1 space-y-2 mt-4">
+            <Label className="text-white/80 text-xs uppercase tracking-wider">New Price (₹)</Label>
             <Input 
-              required value={model} onChange={(e) => setModel(e.target.value)}
-              className="bg-black/50 border-white/10 text-white focus-visible:ring-white/30 h-11" placeholder="e.g. Fortuner" 
+              type="number" required value={price} onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+              className="bg-black/60 border-white/20 text-white focus-visible:ring-white/30 h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+              placeholder="e.g. 500000" 
             />
           </div>
 
-          <div className="col-span-2 space-y-2">
-            <Label className="text-white/80 text-xs uppercase tracking-wider">Category</Label>
-            <select 
-              value={category} onChange={(e) => setCategory(e.target.value)}
-              className="flex h-11 w-full rounded-md border border-white/10 bg-black/50 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-            >
-              <option value="SUV">SUV</option>
-              <option value="Sedan">Sedan</option>
-              <option value="Truck">Truck</option>
-              <option value="Coupe">Coupe</option>
-            </select>
-          </div>
-
-          <div className="col-span-2 md:col-span-1 space-y-2">
-            <Label className="text-white/80 text-xs uppercase tracking-wider">Price (₹)</Label>
+          <div className="col-span-2 md:col-span-1 space-y-2 mt-4">
+            <Label className="text-white/80 text-xs uppercase tracking-wider">Update Quantity</Label>
             <Input 
-              type="number" required value={price} onChange={(e) => setPrice(Number(e.target.value))}
-              className="bg-black/50 border-white/10 text-white focus-visible:ring-white/30 h-11" placeholder="50000" 
+              type="number" required value={quantity} onChange={(e) => setQuantity(e.target.value === "" ? "" : Number(e.target.value))}
+              className="bg-black/60 border-white/20 text-white focus-visible:ring-white/30 h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+              placeholder="e.g. 10" 
             />
           </div>
 
-          <div className="col-span-2 md:col-span-1 space-y-2">
-            <Label className="text-white/80 text-xs uppercase tracking-wider">Quantity in Stock</Label>
-            <Input 
-              type="number" required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))}
-              className="bg-black/50 border-white/10 text-white focus-visible:ring-white/30 h-11" placeholder="10" 
-            />
-          </div>
-
-          <div className="col-span-2 flex gap-4 mt-4">
-            <Button type="button" variant="outline" onClick={() => navigate("/admin")} className="w-1/3 border-white/20 text-white hover:bg-white/10">
+          <div className="col-span-2 flex gap-4 mt-6 border-t border-white/10 pt-6">
+            <Button type="button" variant="outline" onClick={() => navigate("/admin")} disabled={isProcessing} className="w-1/3 border-white/20 text-white hover:bg-white/10">
               Cancel
             </Button>
-            <Button type="submit" className="w-2/3 bg-white text-black hover:bg-white/90 font-medium">
-              <Save className="w-4 h-4 mr-2" /> Save Changes
+            <Button type="submit" disabled={isProcessing} className="w-2/3 bg-white text-black hover:bg-white/90 font-medium">
+              {isProcessing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+              {isProcessing ? "Saving..." : "Save Changes"}
             </Button>
           </div>
         </form>

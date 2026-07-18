@@ -64,14 +64,18 @@ const AdminDashboard = () => {
     setQuantity("");
   };
 
-  const deleteVehicles = async (id: any) =>{
+  const deleteVehicles = async (id: any) => {
     await dispatch(deleteVehicle(id));
     fetchVehicles();
   }
 
-  const restockVehicles =  async (id: any,quantity:number) =>{
-    await dispatch(restockVehicle(id,quantity));
+  const restockVehicles = async (id: any, quantity: number) => {
+    await dispatch(restockVehicle(id, quantity));
     fetchVehicles();
+  }
+
+  const updateVehicles = async(id: any,vehicle: any) => {
+        navigate(`/admin/vehicles/edit/${id}`, { state: { vehicle } })
   }
 
   return (
@@ -116,11 +120,11 @@ const AdminDashboard = () => {
             <CategorySelect value={category} onChange={setCategory} />
             <div className="space-y-2">
               <Label className="text-white/80 text-xs uppercase">Price (₹)</Label>
-              <Input type="number" required value={price} onChange={(e) => setPrice(Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="₹500,000" />
+              <Input type="number" required value={price} onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="₹500,000" />
             </div>
             <div className="space-y-2">
               <Label className="text-white/80 text-xs uppercase">Quantity</Label>
-              <Input type="number" required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="10" />
+              <Input type="number" required value={quantity} onChange={(e) => setQuantity(e.target.value === "" ? "" : Number(e.target.value))} className="bg-black/50 border-white/10 text-white h-11 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" placeholder="10" />
             </div>
 
             <div className="col-span-2 md:col-span-5 flex justify-end mt-2">
@@ -144,7 +148,7 @@ const AdminDashboard = () => {
             <AdminVehicleCard
               key={vehicle._id}
               vehicle={vehicle}
-              onUpdate={(id) => navigate(`/admin/vehicles/edit/${id}`)}
+              onUpdate={(id) => updateVehicles(id,vehicle)}
               onRestock={(id, quantity) => restockVehicles(id, quantity)}
               onDelete={(id) => deleteVehicles(id)}
             />
