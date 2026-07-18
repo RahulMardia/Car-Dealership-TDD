@@ -1,6 +1,8 @@
 import request from 'supertest';
 import app from '../../src/app';
 import { generateToken } from '../../src/utils/jwt';
+import UserModel, { User } from "../../src/models/User";
+import VehicleModel, { Vehicle } from "../../src/models/Vehicle";
 /**
  * Test helper utilities for creating test data and auth tokens
  */
@@ -10,15 +12,16 @@ import { generateToken } from '../../src/utils/jwt';
  */
 export const createTestUser = async (
   role: 'user' | 'admin' = 'user',
-): Promise<{ user: IUser; token: string }> => {
+): Promise<{ user: User; token: string }> => {
   const timestamp = Date.now();
-  const user = await User.create({
+  const user = await UserModel.create({
+    name: 'Test User',
     email: `test-${role}-${timestamp}@example.com`,
     password: 'TestPassword123',
     role,
   });
 
-  const token = generateToken({userId: user._id.toString(), role: user.role });
+  const token = generateToken({id: user._id.toString(), role: user.role });
 
   return { user, token };
 };
@@ -26,18 +29,21 @@ export const createTestUser = async (
 /**
  * Create a test vehicle and return the vehicle document
  */
-export const createTestVehicle = async (overrides?: Partial<IVehicle>): Promise<IVehicle> => {
+export const createTestVehicle = async (
+  owner: string,
+  overrides?: Partial<Vehicle>,
+): Promise<Vehicle> => {
   const defaultVehicle = {
-    make: 'Toyota',
-    model: 'Camry',
-    category: 'Sedan',
+    make: "Toyota",
+    model: "Camry",
+    category: "Sedan",
     price: 25000,
     quantity: 10,
+    owner,
     ...overrides,
   };
 
-  const vehicle = await Vehicle.create(defaultVehicle);
-  return vehicle;
+  return await VehicleModel.create(defaultVehicle);
 };
 
 /**
