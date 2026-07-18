@@ -13,4 +13,8 @@ router.get('/',authenticate,vehicleController.getAllVehicles);
 // Update vehicle data from ID
 router.put('/:id', authenticate, authorizeAdmin, vehicleController.updateVehicle);
 
+// Delete Vehicle using ID
+router.delete('/:id',authenticate, authorizeAdmin, vehicleController.deleteVehicle)
+
+
 export default router;

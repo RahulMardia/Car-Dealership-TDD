@@ -36,3 +36,17 @@ export const updateVehicle = asyncHandler(async (req: any, res: any) => {
     data: vehicle,
   });
 });
+
+// Delete Vehicle 
+export const deleteVehicle = asyncHandler(async (req: any, res: any) => {
+  
+ const vehicle = await vehicleService.deleteVehicle(
+    req.params.id,
+
+  );
+  res.status(200).json({
+    success: true,
+    message: "Vehicle deleted successfully",
+    data: vehicle,
+  });
+});

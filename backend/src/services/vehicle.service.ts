@@ -56,3 +56,14 @@ export const updateVehicle = async (id: string, data: any) => {
     }
     return vehicle;
 } 
+
+// Delete vehicle by ID
+
+export const deleteVehicle = async (id: string) => {
+    
+    const vehicle = await Vehicle.findByIdAndDelete(id);
+    if (!vehicle) {
+        throw new AppError("Vehicle not found", 404);
+    }
+    return vehicle;
+} 
