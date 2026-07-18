@@ -3,31 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api, POST } from "@/lib/apiConstants";
-import { useApi } from "@/hooks/useApi";
 import AuthCardLayout from "@/components/layout/AuthCardLayout";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
+import { loginAction } from "@/redux/actions/authActions";
 
 const Login = () => {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { request, isLoading, error } = useApi();
+const { isLoading, error } = useAppSelector((state) => state.common);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const response = await request(POST, api.login, { email, password });
-      
-      if (response.success && response.token) {
-        // Save the token to local storage
-        
-        localStorage.setItem("token", response.token);
-        
-        // Redirect to dashboard
-        navigate("/dashboard");
-      }
-    } catch (err) {
-      console.error("Login failed", err);
-    }
+    // Replaced api call with dispatch and reducer so multiple api calls does not takes place and clean/smooth data transistion
+    const isSuccess = await dispatch(loginAction(email, password));
+
+    if (isSuccess) {
+          // If success (true) then user will be send to dashboard with it's token saved
+
+    navigate("/dashboard");
+  }
   };
 
   return (
