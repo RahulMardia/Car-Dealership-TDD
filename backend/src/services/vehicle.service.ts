@@ -1,4 +1,5 @@
-import User from "../models/User";
+import { AppError } from "../utils/AppError";
+
 import Vehicle from "../models/Vehicle";
 
 // Type Casting
@@ -42,3 +43,16 @@ export const getAllVehicles = async (query: any) =>{
     // To get all the vehicles
     // return await Vehicle.find()
 }
+
+// Update vehicle details
+export const updateVehicle = async (id: string, data: any) => {
+    
+    const vehicle = await Vehicle.findByIdAndUpdate(id, data, {
+        new: true,
+        runValidators: true,
+    });
+    if (!vehicle) {
+        throw new AppError("Vehicle not found", 404);
+    }
+    return vehicle;
+} 

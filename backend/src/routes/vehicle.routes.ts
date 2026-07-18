@@ -10,4 +10,7 @@ router.post('/', authenticate, authorizeAdmin, vehicleController.createVehicle);
 // Api route for Getting Vehicles(GET)
 router.get('/',authenticate,vehicleController.getAllVehicles);
 
+// Update vehicle data from ID
+router.put('/:id', authenticate, authorizeAdmin, vehicleController.updateVehicle);
+
 export default router;
