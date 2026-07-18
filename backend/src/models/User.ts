@@ -36,4 +36,4 @@ const userSchema = new Schema(
 
 export type User = InferSchemaType<typeof userSchema>;
 
-export default model("Vehicle",userSchema);
+export default model("users",userSchema);
