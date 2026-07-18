@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, PackagePlus, Trash2, X, Settings2 } from "lucide-react";
+import { Edit, PackagePlus, Trash2, X, Settings2, Loader2 } from "lucide-react";
 
 export interface Vehicle {
     _id: string;
@@ -12,16 +12,26 @@ export interface Vehicle {
     quantity: number;
 }
 
-// Added the callback props here!
 interface AdminVehicleCardProps {
     vehicle: Vehicle;
     onUpdate?: (id: string) => void;
     onRestock?: (id: string) => void;
-    onDelete?: (id: string) => void;
+    onDelete?: (id: string) => Promise<void>; 
 }
 
 const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehicleCardProps) => {
     const [showDetails, setShowDetails] = useState(false);
+    
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const handleDelete = async () => {
+        if (onDelete) {
+            setIsDeleting(true);       
+            await onDelete(vehicle._id); 
+            setIsDeleting(false);     
+            setShowDetails(false);     
+        }
+    };
 
     return (
         <Card className="w-full bg-black/40 backdrop-blur-md border-white/10 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden relative flex flex-col h-full">
@@ -32,9 +42,14 @@ const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehic
                     <div className="flex justify-between items-start mb-6">
                         <div>
                             <h3 className="text-xl font-bold">Manage Vehicle</h3>
-                            
+                            <p className="text-white/50 text-xs">ID: {vehicle._id}</p>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={() => setShowDetails(false)} className="hover:bg-white/10 text-white">
+                        <Button 
+                            variant="ghost" size="icon" 
+                            onClick={() => setShowDetails(false)} 
+                            disabled={isDeleting} 
+                            className="hover:bg-white/10 text-white"
+                        >
                             <X className="w-5 h-5" />
                         </Button>
                     </div>
@@ -42,6 +57,7 @@ const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehic
                     <div className="flex flex-col gap-3 flex-grow justify-center">
                         <Button
                             onClick={() => onUpdate && onUpdate(vehicle._id)}
+                            disabled={isDeleting}
                             className="w-full bg-white/10 hover:bg-white text-white hover:text-black transition-all justify-start"
                         >
                             <Edit className="w-4 h-4 mr-3" /> Update Details
@@ -49,16 +65,26 @@ const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehic
                         
                         <Button
                             onClick={() => onRestock && onRestock(vehicle._id)}
+                            disabled={isDeleting}
                             className="w-full bg-green-500/10 hover:bg-green-500 text-green-400 hover:text-black border border-green-500/20 transition-all justify-start"
                         >
                             <PackagePlus className="w-4 h-4 mr-3" /> Restock Inventory
                         </Button>
                         
                         <Button
-                            onClick={() => onDelete && onDelete(vehicle._id)}
+                            onClick={handleDelete}
+                            disabled={isDeleting}
                             className="w-full bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 transition-all justify-start mt-4"
                         >
-                            <Trash2 className="w-4 h-4 mr-3" /> Delete Vehicle
+                            {isDeleting ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-3 animate-spin" /> Deleting...
+                                </>
+                            ) : (
+                                <>
+                                    <Trash2 className="w-4 h-4 mr-3" /> Delete Vehicle
+                                </>
+                            )}
                         </Button>
                     </div>
                 </div>
