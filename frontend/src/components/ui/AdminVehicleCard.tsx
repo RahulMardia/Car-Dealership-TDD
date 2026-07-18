@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Edit, PackagePlus, Trash2, X, Settings2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 export interface Vehicle {
     _id: string;
@@ -13,18 +12,20 @@ export interface Vehicle {
     quantity: number;
 }
 
+// Added the callback props here!
 interface AdminVehicleCardProps {
     vehicle: Vehicle;
+    onUpdate?: (id: string) => void;
+    onRestock?: (id: string) => void;
+    onDelete?: (id: string) => void;
 }
 
-const AdminVehicleCard = ({ vehicle }: AdminVehicleCardProps) => {
-    const navigate = useNavigate();
+const AdminVehicleCard = ({ vehicle, onUpdate, onRestock, onDelete }: AdminVehicleCardProps) => {
     const [showDetails, setShowDetails] = useState(false);
 
     return (
         <Card className="w-full bg-black/40 backdrop-blur-md border-white/10 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group overflow-hidden relative flex flex-col h-full">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
 
             {showDetails && (
                 <div className="absolute inset-0 z-10 bg-black/80 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200 flex flex-col p-6">
@@ -40,19 +41,21 @@ const AdminVehicleCard = ({ vehicle }: AdminVehicleCardProps) => {
 
                     <div className="flex flex-col gap-3 flex-grow justify-center">
                         <Button
-                            onClick={() => navigate(`/admin/vehicles/edit/${vehicle._id}`)}
+                            onClick={() => onUpdate && onUpdate(vehicle._id)}
                             className="w-full bg-white/10 hover:bg-white text-white hover:text-black transition-all justify-start"
                         >
                             <Edit className="w-4 h-4 mr-3" /> Update Details
                         </Button>
+                        
                         <Button
-                            onClick={() => console.log('Restock clicked for', vehicle._id)}
+                            onClick={() => onRestock && onRestock(vehicle._id)}
                             className="w-full bg-green-500/10 hover:bg-green-500 text-green-400 hover:text-black border border-green-500/20 transition-all justify-start"
                         >
                             <PackagePlus className="w-4 h-4 mr-3" /> Restock Inventory
                         </Button>
+                        
                         <Button
-                            onClick={() => console.log('Delete clicked for', vehicle._id)}
+                            onClick={() => onDelete && onDelete(vehicle._id)}
                             className="w-full bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 transition-all justify-start mt-4"
                         >
                             <Trash2 className="w-4 h-4 mr-3" /> Delete Vehicle
@@ -86,7 +89,8 @@ const AdminVehicleCard = ({ vehicle }: AdminVehicleCardProps) => {
                         src="/hero-car.png"
                         alt="Luxury Minimalist Car"
                         className="w-full h-full object-cover opacity-40 scale-105 animate-in fade-in zoom-in duration-[3000ms]"
-                    />        </div>
+                    />        
+                </div>
             </CardContent>
 
             <CardFooter>
