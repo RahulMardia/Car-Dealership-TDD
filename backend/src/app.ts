@@ -1,7 +1,8 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express,} from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-
+import healthRoutes from './routes/health.routes'
+import userRoutes from './routes/auth.routes'
 import { errorHandler } from './middleware/error.middleware';
 
 const app: Express = express();
@@ -12,14 +13,9 @@ app.use(express.json());
 
 
 // Health check endpoint
-app.get('/api/health', (req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    message: 'Car Dealership API is running.',
-    timestamp: new Date().toISOString(),
-  });
-});
+app.use("/api/health",healthRoutes);
 
+app.use("/api/auth",userRoutes);
 // TODO: Add your API routes here during TDD
 
 // Global error handler

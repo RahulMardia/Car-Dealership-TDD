@@ -15,7 +15,14 @@
     "lint:fix": "eslint src/ --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },
-  "keywords": ["car-dealership", "inventory", "tdd", "express", "typescript", "mongodb"],
+  "keywords": [
+    "car-dealership",
+    "inventory",
+    "tdd",
+    "express",
+    "typescript",
+    "mongodb"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -25,7 +32,7 @@
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.9.5"
   },
   "devDependencies": {
@@ -33,7 +40,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
-    "@types/jsonwebtoken": "^9.0.7",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.21.0",

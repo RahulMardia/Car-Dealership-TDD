@@ -5,6 +5,7 @@ import { env } from './env';
  * Connect to MongoDB using Mongoose
  * Supports both MongoDB Atlas and local MongoDB URIs
  */
+
 export const connectDB = async (): Promise<void> => {
   try {
     const conn = await mongoose.connect(env.MONGODB_URI);

@@ -1,10 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
-import { User } from '../../src/models/user.model';
-import { Vehicle } from '../../src/models/vehicle.model';
-import { generateToken } from '../../src/utils/jwt.utils';
-import { IUser, IVehicle } from '../../src/types';
-
+import { generateToken } from '../../src/utils/jwt';
 /**
  * Test helper utilities for creating test data and auth tokens
  */
