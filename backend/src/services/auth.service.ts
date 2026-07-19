@@ -27,6 +27,12 @@ export const register = async ({
     throw new AppError("Email already exists", 409);
   }
 
+
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  if (!passwordRegex.test(password)) {
+    throw new AppError("Password must be at least 6 characters long and contain at least one letter and one number", 400);
+  }
+
 //   Password being Hashed
   const hashedPassword = await hashPassword(password);
 

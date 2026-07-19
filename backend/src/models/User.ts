@@ -23,11 +23,7 @@ const userSchema = new Schema(
         },
         password: {
             type: String,
-            required: true,
-            match: [
-                /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                "Password must be at least 6 characters long and contain at least one letter and one number"
-            ]
+            required: true
         },
         role: {
             type: String,
