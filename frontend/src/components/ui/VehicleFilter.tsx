@@ -53,7 +53,7 @@ const VehicleFilter = ({ filters, setFilters }: VehicleFilterProps) => {
       <div className="flex-[1.5] flex gap-2">
         <div className="w-full">
           <label className="text-xs uppercase tracking-widest text-white/50 mb-1 block font-medium">
-            Min Price ($)
+            Min Price (₹)
           </label>
           <Input
             type="number"
@@ -65,7 +65,7 @@ const VehicleFilter = ({ filters, setFilters }: VehicleFilterProps) => {
         </div>
         <div className="w-full">
           <label className="text-xs uppercase tracking-widest text-white/50 mb-1 block font-medium">
-            Max Price ($)
+            Max Price (₹)
           </label>
           <Input
             type="number"

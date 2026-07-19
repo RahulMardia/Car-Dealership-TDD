@@ -10,7 +10,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-const { isLoading, error } = useAppSelector((state) => state.common);
+  const { isLoading, error } = useAppSelector((state) => state.common);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +36,7 @@ const { isLoading, error } = useAppSelector((state) => state.common);
       onSubmit={handleSubmit}
     >
       {error && (
-        <div className="bg-red-500/20 border border-red-500/50 text-red-200 p-3 rounded-md text-sm text-center mb-2 animate-in fade-in">
+        <div className="bg-red-500/20 border border-red-500/50 text-red-200 p-3 rounded-md text-sm text-center mb-2">
           {error}
         </div>
       )}
