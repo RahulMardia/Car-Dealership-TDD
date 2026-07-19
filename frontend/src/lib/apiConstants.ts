@@ -2,7 +2,7 @@ const   SERVICE_URL = '/api/';
 
 export const api = {
   // Base URI 
-  BASE_URL: 'http://localhost:5000',
+  BASE_URL: import.meta.env.VITE_BACKEND_URL ,
 
   
   login: SERVICE_URL + 'auth/login',
