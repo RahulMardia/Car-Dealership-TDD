@@ -103,6 +103,9 @@ Throughout this project, I used an AI coding assistant to:
 2. **Implement Test-Driven Development**: The AI wrote 9 Vitest integration tests that test the Redux store state directly without relying on deprecated mock-store libraries.
 3. **Design the UI/UX**: The AI built the aesthetic, responsive dark-mode UI using Tailwind CSS, specifically designing the complex glassmorphism overlays and inline forms (like the Restock/Delete panels inside `AdminVehicleCard`).
 4. **Debug**: Fixed tricky React/HTML form behaviors (e.g., preventing page refreshes on form submission and fixing the `0` input bug for number fields).
+5. 
+## Live Demo
+![Live Demo](https://car-dealership-new.netlify.app/)
 
 ## Deployment (Optional)
 To deploy this application live:
